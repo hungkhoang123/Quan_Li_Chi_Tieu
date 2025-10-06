@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sửa Chi Tiêu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            padding: 30px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            background-color: #fff;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 25px 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        div.form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 16px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #0069d9;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Sửa Chi Tiêu</h2>
+
+<form th:action="@{/chi-tieu/sua(id=${chiTieu.id})}" method="post">
+    <div class="form-group">
+        <label for="noiDung">Nội dung:</label>
+        <input type="text" id="noiDung" name="noiDung" th:value="${chiTieu.noiDung}" required />
+    </div>
+
+    <div class="form-group">
+        <label for="soTien">Số tiền:</label>
+        <input type="number" id="soTien" name="soTien" step="0.01" th:value="${chiTieu.soTien}" required />
+    </div>
+
+    <div class="form-group">
+        <label for="ngay">Ngày:</label>
+        <input type="date" id="ngay" name="ngay" th:value="${chiTieu.ngay}" required />
+    </div>
+
+    <div class="form-group">
+        <label for="ghiChu">Ghi chú:</label>
+        <textarea id="ghiChu" name="ghiChu" th:text="${chiTieu.ghiChu}"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="danhMuc">Danh mục:</label>
+        <select id="danhMuc" name="danhMuc.id" required>
+            <option value="">-- Chọn danh mục --</option>
+            <option th:each="dm : ${listDanhMuc}"
+                    th:value="${dm.id}"
+                    th:text="${dm.ten}"
+                    th:selected="${dm.id == chiTieu.danhMuc.id}">
+            </option>
+        </select>
+    </div>
+
+    <button type="submit">Cập nhật</button>
+</form>
+
+</body>
+</html>

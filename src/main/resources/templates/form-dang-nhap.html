@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng nhập - Quản lý chi tiêu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(rgba(11, 61, 145, 0.8), rgba(26, 188, 156, 0.8)), url('/images/bg-finance.jpg') center/cover no-repeat;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 16px;
+            padding: 40px 30px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-box .form-control {
+            border-radius: 12px;
+        }
+
+        .login-box .btn-primary {
+            background-color: #0B3D91;
+            border: none;
+        }
+
+        .login-box .btn-primary:hover {
+            background-color: #1ABC9C;
+        }
+
+        .login-box .logo {
+            font-size: 30px;
+            font-weight: bold;
+            color: #0B3D91;
+        }
+
+        .login-box .text-muted a {
+            color: #0B3D91;
+            text-decoration: none;
+        }
+
+        .login-box .text-muted a:hover {
+            color: #1ABC9C;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-box">
+    <div class="text-center mb-4">
+        <div class="logo"><i class="bi bi-wallet2 me-2"></i>Quản lí chi tiêu</div>
+        <p class="text-muted">Đăng nhập để tiếp tục quản lý chi tiêu</p>
+    </div>
+
+    <form th:action="@{/login}" method="post">
+        <div class="mb-3">
+            <label for="username" class="form-label">Tài khoản</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Nhập tài khoản" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Mật khẩu</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Nhập mật khẩu" required>
+        </div>
+
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Đăng nhập</button>
+        </div>
+
+        <div class="text-center mt-3 text-muted">
+            Chưa có tài khoản? <a th:href="@{/dang-ki}">Đăng ký ngay</a>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
