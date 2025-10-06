@@ -68,7 +68,7 @@
     </style>
 </head>
 <body>
-
+<div th:replace="layout/header :: header"></div>
 <h2>Thêm mới Danh Mục</h2>
 
 <form th:action="@{/danh-muc/them}" method="post">
@@ -100,6 +100,6 @@
 
     <button type="submit">Lưu</button>
 </form>
-
+<div th:replace="layout/footer :: footer"></div>
 </body>
 </html>

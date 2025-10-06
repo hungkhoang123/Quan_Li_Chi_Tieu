@@ -69,7 +69,7 @@
     </style>
 </head>
 <body>
-
+<div th:replace="layout/header :: header"></div>
 <h2>Sửa Chi Tiêu</h2>
 
 <form th:action="@{/chi-tieu/sua(id=${chiTieu.id})}" method="post">
@@ -107,6 +107,6 @@
 
     <button type="submit">Cập nhật</button>
 </form>
-
+<div th:replace="layout/footer :: footer"></div>
 </body>
 </html>

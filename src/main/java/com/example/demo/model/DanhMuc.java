@@ -1,63 +1,34 @@
 package com.example.demo.model;
 
-import java.time.LocalDate;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.List;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "danh_muc")
 public class DanhMuc {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String ten;
-    private String moTa;
+
+    @Column(name = "ten_danh_muc")
+    private String tenDanhMuc;
+
     private String loai;
-    private LocalDate ngayTao;
+    private String bieuTuong;
 
-    public DanhMuc() {
-    }
+    @ManyToOne
+    @JoinColumn(name = "nguoi_dung_id")
+    private NguoiDung nguoiDung;
 
-    public Integer getId() {
-        return id;
-    }
+    @OneToMany(mappedBy = "danhMuc")
+    private List<ChiTieu> chiTieus;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getTen() {
-        return ten;
-    }
-
-    public void setTen(String ten) {
-        this.ten = ten;
-    }
-
-    public String getMoTa() {
-        return moTa;
-    }
-
-    public void setMoTa(String moTa) {
-        this.moTa = moTa;
-    }
-
-    public String getLoai() {
-        return loai;
-    }
-
-    public void setLoai(String loai) {
-        this.loai = loai;
-    }
-
-    public LocalDate getNgayTao() {
-        return ngayTao;
-    }
-
-    public void setNgayTao(LocalDate ngayTao) {
-        this.ngayTao = ngayTao;
-    }
-
-    public DanhMuc(Integer id, String ten, String moTa, String loai, LocalDate ngayTao) {
-        this.id = id;
-        this.ten = ten;
-        this.moTa = moTa;
-        this.loai = loai;
-        this.ngayTao = ngayTao;
-    }
 }

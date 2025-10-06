@@ -155,27 +155,7 @@
 <body>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="#"><i class="bi bi-wallet2 me-2"></i>Quản lý chi tiêu</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav align-items-center">
-                <li class="nav-item">
-                    <a class="nav-link active" href="/trang-chu"><i class="bi bi-house-door me-1"></i> Trang chủ</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/dang-nhap}"><i class="bi bi-box-arrow-in-right me-1"></i> Đăng nhập</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/dang-ki}"><i class="bi bi-person-plus me-1"></i> Đăng ký</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<div th:replace="layout/header :: header"></div>
 
 <!-- Sidebar -->
 <div class="sidebar list-group list-group-flush">
@@ -199,10 +179,9 @@
             <thead>
             <tr>
                 <th>ID</th>
-                <th>Nội dung</th>
+                <th>Mô tả</th>
                 <th>Số tiền</th>
                 <th>Ngày</th>
-                <th>Ghi chú</th>
                 <th>Danh mục</th>
                 <th>Hành động</th>
             </tr>
@@ -210,11 +189,10 @@
             <tbody>
             <tr th:each="ct : ${listChiTieu}">
                 <td th:text="${ct.id}" class="text-center"></td>
-                <td th:text="${ct.noiDung}" class="text-center"></td>
+                <td th:text="${ct.moTa}" class="text-center"></td>
                 <td th:text="${#numbers.formatDecimal(ct.soTien, 0, 'COMMA', 1, 'POINT')} + ' đ'" class="text-money text-center"></td>
-                <td th:text="${#temporals.format(ct.ngay, 'dd/MM/yyyy')}" class="text-center"></td>
-                <td th:text="${ct.ghiChu}" class="text-center"></td>
-                <td th:text="${ct.danhMuc != null ? ct.danhMuc.ten : '---'}" class="text-muted text-center"></td>
+                <td th:text="${ct.ngayGiaoDich != null ? #temporals.format(ct.ngayGiaoDich, 'dd/MM/yyyy') : 'Chưa có ngày'}"></td>
+                <td th:text="${ct.danhMuc != null ? ct.danhMuc.tenDanhMuc : ''}" class="text-muted text-center"></td>
                 <td class="text-center">
                     <a th:href="@{/chi-tieu/form-sua(id=${ct.id})}" class="btn btn-edit me-1 text-center">
                         <i class="bi bi-pencil"></i> Sửa
@@ -237,35 +215,7 @@
 </div>
 
 <!-- Footer -->
-<footer class="pt-5 pb-4">
-    <div class="container text-md-start text-center">
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <h5 class="fw-bold"><i class="bi bi-wallet2 me-2"></i>Quản lí chi tiêu</h5>
-                <p>Kiểm soát tài chính cá nhân, ghi chép thu chi, theo dõi ngân sách và tối ưu chi tiêu thông minh.</p>
-            </div>
-            <div class="col-md-3 mb-4">
-                <h6 class="text-uppercase fw-bold mb-3">Hỗ trợ</h6>
-                <ul class="list-unstyled">
-                    <li><i class="bi bi-envelope me-2"></i> tuanhungjp2002@gmail.com</li>
-                    <li><i class="bi bi-telephone me-2"></i> 0362308858</li>
-                    <li><i class="bi bi-geo-alt me-2"></i> Nam Từ Liêm, Hà Nội</li>
-                </ul>
-            </div>
-            <div class="col-md-3 mb-4">
-                <h6 class="text-uppercase fw-bold mb-3">Kết nối</h6>
-                <a href="#" class="text-light fs-5 me-3"><i class="bi bi-facebook"></i></a>
-                <a href="#" class="text-light fs-5 me-3"><i class="bi bi-instagram"></i></a>
-                <a href="#" class="text-light fs-5 me-3"><i class="bi bi-twitter"></i></a>
-                <a href="#" class="text-light fs-5"><i class="bi bi-youtube"></i></a>
-            </div>
-        </div>
-        <hr class="border-light">
-        <div class="text-center">
-            <p class="mb-0">&copy; 2025 <strong>Quản lí chi tiêu</strong> – All rights reserved.</p>
-        </div>
-    </div>
-</footer>
+<div th:replace="layout/footer :: footer"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

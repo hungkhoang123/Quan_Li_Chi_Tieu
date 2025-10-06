@@ -5,29 +5,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "chi_tieu")
-public class ChiTieu {
+@Table(name = "han_muc_chi_tieu")
+public class HanMucChiTieu {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Double soTien;
+    private Integer thang;
+    private Integer nam;
 
-    private String moTa;
-
-    @Column(name = "ngay_giao_dich")
-    private LocalDate ngayGiaoDich;
-
-    @ManyToOne
-    @JoinColumn(name = "danh_muc_id")
-    private DanhMuc danhMuc;
+    @Column(name = "so_tien_gioi_han")
+    private Double soTienGioiHan;
 
     @ManyToOne
     @JoinColumn(name = "nguoi_dung_id")

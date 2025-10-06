@@ -1,0 +1,23 @@
+<nav th:fragment="header" class="navbar navbar-expand-lg navbar-light bg-primary-subtle shadow-sm fixed-top"
+     xmlns:th="">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="#"><i class="bi bi-wallet2 me-2"></i>Quản lý chi tiêu</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/trang-chu"><i class="bi bi-house-door me-1"></i> Trang chủ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href=@{/dang-nhap}><i class="bi bi-box-arrow-in-right me-1"></i> Đăng
+                        nhập</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href=@{/dang-ki}><i class="bi bi-person-plus me-1"></i> Đăng ký</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
