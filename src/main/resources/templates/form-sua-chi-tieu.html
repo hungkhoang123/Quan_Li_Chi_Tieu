@@ -1,112 +1,164 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Sửa Chi Tiêu</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
+        :root {
+            --main-color: #0B3D91; /* Navy */
+            --accent-color: #1ABC9C; /* Teal */
+            --light-bg: #f8f9fa;
+            --dark-bg: #2c3e50;
+            --highlight: #ffc107;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
-            padding: 30px;
-        }
-
-        h2 {
-            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
             color: #333;
+            margin: 0;
+            padding: 0;
         }
 
-        form {
-            background-color: #fff;
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 25px 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        .navbar {
+            background-color: #e3f2fd !important;
         }
 
-        div.form-group {
-            margin-bottom: 15px;
+        .navbar .nav-link {
+            color: var(--main-color);
+            font-weight: 500;
         }
 
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
+        .navbar .nav-link:hover {
+            color: var(--accent-color);
         }
 
-        input[type="text"],
-        input[type="number"],
-        input[type="date"],
-        textarea,
-        select {
-            width: 100%;
-            padding: 8px 10px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
+        .sidebar {
+            top: 56px;
+            position: fixed;
+            left: 0;
+            height: 100vh;
+            width: 220px;
+            background-color: white;
+            border-right: 1px solid #dee2e6;
+            padding-top: 1rem;
+            z-index: 1050;
         }
 
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
 
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 16px;
-            font-size: 16px;
+        .sidebar .list-group-item {
             border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
+            font-weight: 500;
+            color: var(--main-color);
+            transition: 0.2s;
         }
 
-        button:hover {
-            background-color: #0069d9;
+        .sidebar .list-group-item:hover,
+        .sidebar .list-group-item.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .main-content {
+            margin-left: 220px;
+            padding: 80px 30px 30px;
+        }
+
+        /* Form card */
+        .form-card {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .form-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .form-card h2 {
+            text-align: center;
+            color: var(--main-color);
+            margin-bottom: 25px;
+        }
+
+        footer {
+            background-color: var(--dark-bg);
+            color: #ecf0f1;
+            font-size: 15px;
+            margin-top: 60px;
+            margin-left: 220px;
         }
     </style>
 </head>
 <body>
+
+<!-- Header -->
 <div th:replace="layout/header :: header"></div>
-<h2>Sửa Chi Tiêu</h2>
 
-<form th:action="@{/chi-tieu/sua(id=${chiTieu.id})}" method="post">
-    <div class="form-group">
-        <label for="noiDung">Nội dung:</label>
-        <input type="text" id="noiDung" name="noiDung" th:value="${chiTieu.noiDung}" required />
-    </div>
+<!-- Sidebar -->
+<div class="sidebar list-group list-group-flush">
+    <a href="/chi-tieu" class="list-group-item py-3"><i class="bi bi-journal-plus me-2"></i> Ghi chép giao dịch</a>
+    <a href="/danh-muc" class="list-group-item py-3"><i class="bi bi-tags me-2"></i> Quản lý danh mục</a>
+    <a href="/thong-ke" class="list-group-item py-3"><i class="bi bi-graph-up-arrow me-2"></i> Biểu đồ tuần/tháng</a>
+    <a href="/goi-y" class="list-group-item py-3"><i class="bi bi-lightbulb me-2"></i> Gợi ý cắt giảm chi tiêu</a>
+    <a href="/canh-bao" class="list-group-item py-3"><i class="bi bi-exclamation-triangle me-2"></i> Cảnh báo vượt
+        ngưỡng</a>
+    <hr class="mx-3 my-2">
+    <a href="/tai-khoan" class="list-group-item py-3"><i class="bi bi-person-circle me-2"></i> Tài khoản của tôi</a>
+</div>
 
-    <div class="form-group">
-        <label for="soTien">Số tiền:</label>
-        <input type="number" id="soTien" name="soTien" step="0.01" th:value="${chiTieu.soTien}" required />
-    </div>
+<!-- Main content -->
+<div class="main-content">
+    <h2 class="mb-4 text-center fw-bold" style="color: var(--main-color);">Sửa Chi Tiêu</h2>
 
-    <div class="form-group">
-        <label for="ngay">Ngày:</label>
-        <input type="date" id="ngay" name="ngay" th:value="${chiTieu.ngay}" required />
-    </div>
+    <form th:action="@{/chi-tieu/sua}" method="post" class="form-card">
+        <input type="hidden" name="id" th:value="${chiTieu.id}"/>
 
-    <div class="form-group">
-        <label for="ghiChu">Ghi chú:</label>
-        <textarea id="ghiChu" name="ghiChu" th:text="${chiTieu.ghiChu}"></textarea>
-    </div>
+        <div class="mb-3">
+            <label for="soTien" class="form-label">Số tiền:</label>
+            <input type="number" id="soTien" name="soTien" step="0.01" class="form-control" th:value="${chiTieu.soTien}"
+                   required/>
+        </div>
 
-    <div class="form-group">
-        <label for="danhMuc">Danh mục:</label>
-        <select id="danhMuc" name="danhMuc.id" required>
-            <option value="">-- Chọn danh mục --</option>
-            <option th:each="dm : ${listDanhMuc}"
-                    th:value="${dm.id}"
-                    th:text="${dm.ten}"
-                    th:selected="${dm.id == chiTieu.danhMuc.id}">
-            </option>
-        </select>
-    </div>
+        <div class="mb-3">
+            <label for="ngayGiaoDich" class="form-label">Ngày:</label>
+            <input type="date" id="ngayGiaoDich" name="ngayGiaoDich" class="form-control"
+                   th:value="${chiTieu.ngayGiaoDich}" required/>
+        </div>
 
-    <button type="submit">Cập nhật</button>
-</form>
+        <div class="mb-3">
+            <label for="moTa" class="form-label">Mô tả:</label>
+            <textarea id="moTa" name="moTa" class="form-control" rows="3" th:text="${chiTieu.moTa}"></textarea>
+        </div>
+
+        <div class="mb-4">
+            <label for="danhMuc" class="form-label">Danh mục:</label>
+            <select id="danhMuc" name="danhMuc.id" class="form-select" required>
+                <option value="">-- Chọn danh mục --</option>
+                <option th:each="dm : ${listDanhMuc}"
+                        th:value="${dm.id}"
+                        th:text="${dm.tenDanhMuc}"
+                        th:selected="${dm.id == chiTieu.danhMuc.id}">
+                </option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100 fw-semibold">
+            <i class="bi bi-save me-1"></i> Cập nhật Chi Tiêu
+        </button>
+    </form>
+</div>
+
+<!-- Footer -->
 <div th:replace="layout/footer :: footer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

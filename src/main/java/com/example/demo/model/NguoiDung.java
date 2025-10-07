@@ -19,6 +19,9 @@ public class NguoiDung {
     private Integer id;
 
     private String ten;
+
+    private String tenTaiKhoan;
+
     private String email;
 
     @Column(name = "mat_khau")
