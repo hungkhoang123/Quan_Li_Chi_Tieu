@@ -32,6 +32,11 @@ public class QuanLyChiTieuController {
     @Autowired
     private DanhMucRepository danhMucRepository;
 
+    @GetMapping("")
+    public String macDinh() {
+        return "trang-chu";
+    }
+
     @GetMapping("/trang-chu")
     public String trangChu() {
         return "trang-chu";
