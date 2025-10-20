@@ -162,6 +162,43 @@
 
 <!-- Main content -->
 <div class="main-content">
+    <form th:action="@{/danh-muc}" method="get" class="row g-3 mb-4 align-items-end">
+        <!-- Tìm theo tên danh mục -->
+        <div class="col-md-4">
+            <label class="form-label fw-semibold">Từ khóa tên danh mục</label>
+            <input type="text" name="keyword" th:value="${keyword}" class="form-control" placeholder="Nhập tên danh mục...">
+        </div>
+
+        <!-- Lọc theo loại -->
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Loại danh mục</label>
+            <select name="loai" class="form-select">
+                <option value="">-- Tất cả --</option>
+                <option value="THU" th:selected="${loai == 'THU'}">Thu</option>
+                <option value="CHI" th:selected="${loai == 'CHI'}">Chi</option>
+            </select>
+        </div>
+
+        <!-- Sắp xếp -->
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Sắp xếp</label>
+            <select name="sortDir" class="form-select">
+                <option value="asc" th:selected="${sortDir == 'asc'}">Tên A → Z</option>
+                <option value="desc" th:selected="${sortDir == 'desc'}">Tên Z → A</option>
+            </select>
+            <input type="hidden" name="sortBy" value="tenDanhMuc"/>
+        </div>
+
+        <div class="col-12 text-center">
+            <button type="submit" class="btn btn-primary px-4">
+                <i class="bi bi-search me-1"></i> Tìm kiếm
+            </button>
+            <a href="/danh-muc" class="btn btn-secondary px-4">
+                <i class="bi bi-arrow-clockwise me-1"></i> Làm mới
+            </a>
+        </div>
+    </form>
+
     <h2 class="mb-4 text-center fw-bold" style="color: var(--main-color);">Danh sách các danh mục</h2>
 
     <div class="table-responsive">
@@ -198,6 +235,27 @@
             </tr>
             </tbody>
         </table>
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/danh-muc(page=${currentPage - 1}, keyword=${keyword}, loai=${loai}, sortDir=${sortDir})}">
+                        Trước
+                    </a>
+                </li>
+
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link" th:text="${i + 1}"
+                       th:href="@{/danh-muc(page=${i}, keyword=${keyword}, loai=${loai}, sortDir=${sortDir})}"></a>
+                </li>
+
+                <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+                    <a class="page-link" th:href="@{/danh-muc(page=${currentPage + 1}, keyword=${keyword}, loai=${loai}, sortDir=${sortDir})}">
+                        Sau
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 
     <div class="text-center mt-4">

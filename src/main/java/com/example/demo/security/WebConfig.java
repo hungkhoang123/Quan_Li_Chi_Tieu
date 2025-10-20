@@ -14,8 +14,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
-                .addPathPatterns("/chi-tieu/**", "/danh-muc/**", "/thong-ke/**") // các trang cần bảo vệ
-                .excludePathPatterns("/dang-nhap", "/dang-ky", "/css/**", "/js/**", "/images/**"); // loại trừ trang login/ signup
+                .addPathPatterns("/chi-tieu/**", "/danh-muc/**", "/thong-ke/**")
+                .excludePathPatterns("/dang-nhap", "/dang-ky");
     }
 }
 

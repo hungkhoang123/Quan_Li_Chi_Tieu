@@ -5,19 +5,18 @@ import com.example.demo.model.DanhMuc;
 import com.example.demo.model.NguoiDung;
 import com.example.demo.repository.ChiTieuRepository;
 import com.example.demo.repository.DanhMucRepository;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.demo.service.ChiTieuService;
+import com.example.demo.service.DanhMucService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.*;
@@ -32,6 +31,12 @@ public class QuanLyChiTieuController {
     @Autowired
     private DanhMucRepository danhMucRepository;
 
+    @Autowired
+    private ChiTieuService  chiTieuService;
+
+    @Autowired
+    private DanhMucService danhMucService;
+
     @GetMapping("")
     public String macDinh() {
         return "trang-chu";
@@ -43,25 +48,84 @@ public class QuanLyChiTieuController {
     }
 
     @GetMapping("/chi-tieu")
-    public String chiTieu(Model model, HttpSession session) {
-        NguoiDung user = (NguoiDung) session.getAttribute("user");
+    public String chiTieu(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Double minAmount,
+            @RequestParam(required = false) Double maxAmount,
+            @RequestParam(required = false) Long danhMucId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir,
+            Model model,
+            HttpSession session) {
 
-        List<ChiTieu> listChiTieu = chiTieuRepository.findByNguoiDungId(user.getId());
+        NguoiDung user = (NguoiDung) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        Sort sort = sortDir.equals("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<ChiTieu> pageChiTieu = chiTieuService.timKiemVaLoc(
+                user.getId().longValue(),
+                keyword,
+                minAmount,
+                maxAmount,
+                danhMucId,
+                pageable
+        );
+
         List<DanhMuc> listDanhMuc = danhMucRepository.findByNguoiDungId(user.getId());
 
-        model.addAttribute("listChiTieu", listChiTieu != null ? listChiTieu : new ArrayList<>());
-        model.addAttribute("listDanhMuc", listDanhMuc != null ? listDanhMuc : new ArrayList<>());
+        model.addAttribute("listChiTieu", pageChiTieu.getContent());
+        model.addAttribute("listDanhMuc", listDanhMuc);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", pageChiTieu.getTotalPages());
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("minAmount", minAmount);
+        model.addAttribute("maxAmount", maxAmount);
+        model.addAttribute("danhMucId", danhMucId);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortDir", sortDir);
+
         return "danh-sach-chi-tieu";
     }
 
-    @GetMapping("/danh-muc")
-    public String dsDanhMuc(Model model, HttpSession session) {
-        NguoiDung user = (NguoiDung) session.getAttribute("user");
 
-        List<DanhMuc> listDanhMuc = danhMucRepository.findByNguoiDungId(user.getId());
-        model.addAttribute("listDanhMuc", listDanhMuc != null ? listDanhMuc : new ArrayList<>());
+    @GetMapping("/danh-muc")
+    public String danhMuc(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String loai,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "tenDanhMuc") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            Model model,
+            HttpSession session) {
+
+        NguoiDung user = (NguoiDung) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        Sort sort = sortDir.equals("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<DanhMuc> pageDanhMuc = danhMucService.timKiemVaLoc(user.getId(), keyword, loai, pageable);
+
+        model.addAttribute("listDanhMuc", pageDanhMuc.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", pageDanhMuc.getTotalPages());
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("loai", loai);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortDir", sortDir);
+
         return "danh-sach-danh-muc";
     }
+
 
     @GetMapping("/chi-tieu/form-them")
     public String formThemChiTieu(Model model, HttpSession session) {
@@ -222,5 +286,45 @@ public class QuanLyChiTieuController {
         model.addAttribute("tongTienValues", new ArrayList<>(tongTheoDanhMuc.values()));
 
         return "thong-ke/thong-ke";
+    }
+
+    @GetMapping("/chi-tieu/loc")
+    public String locChiTieu(
+            @RequestParam(required = false) Double minAmount,
+            @RequestParam(required = false) Double maxAmount,
+            Model model,
+            HttpSession session,
+            Pageable pageable) {
+
+        NguoiDung user = (NguoiDung) session.getAttribute("user");
+
+        Page<ChiTieu> listChiTieu = chiTieuService.timKiemVaLoc(
+                user.getId().longValue(),
+                null,
+                minAmount,
+                maxAmount,
+                null,
+                pageable
+        );
+
+        model.addAttribute("listChiTieu", listChiTieu.getContent());
+        model.addAttribute("minAmount", minAmount);
+        model.addAttribute("maxAmount", maxAmount);
+
+        return "danh-sach-chi-tieu";
+    }
+
+    @GetMapping("/tai-khoan")
+    public String taiKhoan(Model model, HttpSession session) {
+
+        NguoiDung user = (NguoiDung) session.getAttribute("user");
+
+
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("user", user);
+        return "account/tai-khoan";
     }
 }

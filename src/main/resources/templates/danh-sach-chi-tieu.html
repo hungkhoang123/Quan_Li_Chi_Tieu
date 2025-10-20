@@ -169,7 +169,55 @@
 </div>
 
 <!-- Main content -->
+
 <div class="main-content">
+    <form th:action="@{/chi-tieu}" method="get" class="row g-3 mb-4 align-items-end">
+
+        <!-- Từ khóa -->
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Từ khóa mô tả</label>
+            <input type="text" name="keyword" th:value="${keyword}" class="form-control" placeholder="Nhập mô tả...">
+        </div>
+
+        <!-- Khoảng tiền -->
+        <div class="col-md-2">
+            <label class="form-label fw-semibold">Từ số tiền</label>
+            <input type="number" name="minAmount" th:value="${minAmount}" class="form-control" placeholder="0">
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label fw-semibold">Đến số tiền</label>
+            <input type="number" name="maxAmount" th:value="${maxAmount}" class="form-control" placeholder="1000000">
+        </div>
+
+        <!-- Danh mục -->
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Danh mục</label>
+            <select name="danhMucId" class="form-select">
+                <option value="">-- Tất cả --</option>
+                <option th:each="dm : ${listDanhMuc}"
+                        th:value="${dm.id}"
+                        th:text="${dm.tenDanhMuc}"
+                        th:selected="${danhMucId == dm.id}">
+                </option>
+            </select>
+        </div>
+
+        <!-- Sắp xếp -->
+        <div class="col-md-2">
+            <label class="form-label fw-semibold">Sắp xếp</label>
+            <select name="sortDir" class="form-select">
+                <option value="asc" th:selected="${sortDir == 'asc'}">Số tiền tăng dần</option>
+                <option value="desc" th:selected="${sortDir == 'desc'}">Số tiền giảm dần</option>
+            </select>
+            <input type="hidden" name="sortBy" value="soTien"/>
+        </div>
+
+        <div class="col-12 text-center">
+            <button type="submit" class="btn btn-primary px-4"><i class="bi bi-search me-1"></i> Tìm kiếm</button>
+            <a href="/chi-tieu" class="btn btn-secondary px-4"><i class="bi bi-arrow-clockwise me-1"></i> Làm mới</a>
+        </div>
+    </form>
     <h2 class="mb-4 text-center fw-bold" style="color: var(--main-color);">Danh sách các khoản chi tiêu</h2>
 
     <div class="table-responsive">
@@ -203,6 +251,23 @@
             </tr>
             </tbody>
         </table>
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/chi-tieu(page=${currentPage - 1}, keyword=${keyword}, minAmount=${minAmount}, maxAmount=${maxAmount}, danhMucId=${danhMucId}, sortDir=${sortDir})}">Trước</a>
+                </li>
+
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link" th:text="${i + 1}"
+                       th:href="@{/chi-tieu(page=${i}, keyword=${keyword}, minAmount=${minAmount}, maxAmount=${maxAmount}, danhMucId=${danhMucId}, sortDir=${sortDir})}"></a>
+                </li>
+
+                <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+                    <a class="page-link" th:href="@{/chi-tieu(page=${currentPage + 1}, keyword=${keyword}, minAmount=${minAmount}, maxAmount=${maxAmount}, danhMucId=${danhMucId}, sortDir=${sortDir})}">Sau</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 
     <div class="text-center mt-4">

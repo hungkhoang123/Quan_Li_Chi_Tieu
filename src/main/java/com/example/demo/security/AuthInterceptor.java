@@ -16,12 +16,12 @@ public class AuthInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
         Object user = session.getAttribute("user");
 
-        // Nếu chưa đăng nhập, redirect về trang đăng nhập
+
         if (user == null) {
             response.sendRedirect("/dang-nhap");
             return false;
         }
 
-        return true; // đã đăng nhập thì tiếp tục
+        return true;
     }
 }
